@@ -48,7 +48,8 @@ public class Database {
         if (recordCounter % recordsPerBlock == 0) {
             recordCounter = 0;
             this.usedSize += blockSize;
-            totalBlockSize += blockSize;
+            this.availableSize -= blockSize;
+            this.totalBlockSize += blockSize;
             memoryBlock.add(blk);
             this.totalNoOfBlocksAvail--;
             this.totalNoOfBlocksUsed++;
@@ -66,7 +67,7 @@ public class Database {
         this.totalNoOfBlocksUsed--;
 
         this.usedSize -= recordSize;
-
+        this.availableSize += recordSize;
         this.totalRecordSize -= recordSize;
     }
 
