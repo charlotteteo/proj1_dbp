@@ -3,12 +3,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Block {
+	// list of records should be within block size
 	private List<Record> records;
-	
-	public Block () {
+
+	public Block() {
 		this.records = new ArrayList<>();
 	}
-	
+
 	public List<Record> getRecords() {
 		return records;
 	}
@@ -19,4 +20,5 @@ public class Block {
 			this.records.add(iter.next());
 		}
 	}
+
 }
