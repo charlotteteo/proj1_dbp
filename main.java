@@ -20,10 +20,16 @@ public class main {
             Record new_record = new Record(values[0], Float.parseFloat("5.1"), Integer.parseInt("6"));
             System.out.println("Record " + lineNumber + " :" + values[1]);
             new_record.printRecord();
+            System.out.println("\n");
             lineNumber++;
         }
-
+        Block block = new Block();
+        Record rec = new Record("2314as", (float) 6.3, 4);
         Database database = new Database(50000000, 200);
+        database.printInformation();
+        System.out.println("\n");
+        database.allocateBlock(block, rec);
+        System.out.println("\n");
         database.printInformation();
 
     }
