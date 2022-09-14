@@ -21,4 +21,11 @@ public class Block {
 		}
 	}
 
+	public int getNumberOfRecords() {
+		return records.size();
+	}
+
+	public void printRecords() {
+		System.out.println("Records in Block:" + records);
+	}
 }

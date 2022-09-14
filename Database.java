@@ -24,12 +24,15 @@ public class Database {
     public int totalBlockSize;
     public int totalRecordSize;
     public int recordCounter = 0;
+    // Block number based on index in Memory Block
     private List<Block> memoryBlock;
     private Block blk;
 
     public Database(int diskSize, int blockSize) {
+        // unchanged - disk,individual block size, total number of blocks
         this.diskSize = diskSize;
         this.blockSize = blockSize;
+
         this.totalNoOfBlocks = (int) diskSize / blockSize;
         this.totalNoOfBlocksAvail = (int) diskSize / blockSize;
         this.usedSize = 0;
@@ -43,40 +46,42 @@ public class Database {
         memoryBlock = new ArrayList<>();
     }
 
-    public void allocateBlock(Block newBlk, Record rec) {
+    public int allocateRecordToBlock(Block newBlk, Record rec) {
 
         // Block newBlk = new Block();
         blk = newBlk;
-        blk.getRecords().add(rec);
-
-        if (recordCounter % this.recordsPerBlock == 0) {
-            recordCounter = 0;
-            this.usedSize += blockSize;
-            this.availableSize -= blockSize;
-            this.totalBlockSize += blockSize;
-            memoryBlock.add(blk);
-            this.totalNoOfBlocksAvail--;
-            this.totalNoOfBlocksUsed++;
+        // ADD NEW RECORD INTO BLOCK
+        if (blk.getNumberOfRecords() < this.recordsPerBlock) {
+            blk.getRecords().add(rec);
+            this.totalNoOfRecords++;
+            this.usedSize += recordSize;
+            this.availableSize -= recordSize;
+            this.totalRecordSize += recordSize;
+            return 1;
         }
 
-        this.totalRecordSize += recordSize;
-        this.totalNoOfRecords += 1;
-        this.recordCounter++;
-
-        System.out.println("allocated record:");
-        rec.printRecord();
+        else {
+            System.out.println(newBlk + "full");
+            return 0;
+        }
     }
 
-    public void deallocateBlock() {
-        // Number of blocks remaining plus 1
+    public void allocateBlock(Block newBlk) {
+        this.totalNoOfBlocksAvail--;
+        this.totalNoOfBlocksUsed++;
+        memoryBlock.add(newBlk);
+        System.out.println("Allocated " + newBlk + " to Memory");
+    }
+
+    public void deallocateBlock(Block newBlk) {
         this.totalNoOfBlocksAvail++;
-
-        // Number of blocks deallocated minus 1
         this.totalNoOfBlocksUsed--;
-
         this.usedSize -= recordSize;
         this.availableSize += recordSize;
         this.totalRecordSize -= recordSize;
+        memoryBlock.remove(newBlk);
+        System.out.println("Deallocated  " + newBlk + " to Memory");
+        // pop block from memory
     }
 
     public void printInformation() {
@@ -88,19 +93,18 @@ public class Database {
         System.out.println("total number of blocks:" + totalNoOfBlocks);
         System.out.println("total number of blocks avail:" + totalNoOfBlocksAvail);
         System.out.println("total number of blocks used:" + totalNoOfBlocksUsed);
-        System.out.println("block size:" + totalBlockSize + " bytes");
         System.out.println("total number of records:" + totalNoOfRecords);
         System.out.println("record size:" + totalRecordSize + " bytes");
     }
 
     public void printRecords() {
         for (int x = 0; x < memoryBlock.size(); x++) {
-            for (int y = 0; x < memoryBlock.get(x).getRecords().size(); y++) {
-                System.out.println("record in block" + x + "(T Const): " +
+            for (int y = 0; y < memoryBlock.get(x).getRecords().size(); y++) {
+                System.out.println("record " + y + " in block " + x + " (T Const): " +
                         memoryBlock.get(x).getRecords().get(y).getTConst());
-                System.out.println("record in block" + x + "(Average Rating):" +
+                System.out.println("record " + y + " in block " + x + " (Average Rating):" +
                         memoryBlock.get(x).getRecords().get(y).getAverageRating());
-                System.out.println("record in block" + x + "(Number of Votes):" +
+                System.out.println("record " + y + " in block " + x + " (Number of Votes):" +
                         memoryBlock.get(x).getRecords().get(y).getNumVotes());
             }
         }
