@@ -37,12 +37,16 @@ public class main {
         // database.printRecords();
 
         // ALLOCATE RECORDS TO MEMORY
+        Scanner scan = new Scanner(System.in);
 
+        System.out.println("Input Block Size:");
         // Initialise Database
-        Database database = new Database(100000000, 200);
+        int num = scan.nextInt();
+
+        Database database = new Database(100000000, num);
         database.printInformation();
 
-        System.out.println("##############EXPERIMENT 1: ######################");
+        System.out.println(" ##############EXPERIMENT 1: ######################");
         File text = new File("./data-2.tsv");
         // File text = new File("./data-sample.tsv");
 
