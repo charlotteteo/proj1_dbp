@@ -47,8 +47,8 @@ public class main {
         database.printInformation();
 
         System.out.println(" ##############EXPERIMENT 1: ######################");
-        File text = new File("./data-2.tsv");
-        // File text = new File("./data-sample.tsv");
+        // File text = new File("./data-2.tsv");
+        File text = new File("./data-sample.tsv");
 
         // Creating Scanner instance to read File in Java
         Scanner scnr = new Scanner(text);
@@ -56,7 +56,7 @@ public class main {
         // Reading each line of the file using Scanner class
 
         String line = scnr.nextLine();
-
+        BPlusTree tree = new BPlusTree((int) num / 12);
         Block block = new Block();
         // keep track of not allocated block
         int blockCreated = 1;
@@ -66,6 +66,8 @@ public class main {
             String[] values = line.split("\t");
             Record new_record = new Record(values[0], Float.parseFloat(values[1].strip()),
                     Integer.parseInt(values[2].strip()));
+            tree.insertKey(Float.parseFloat(String.valueOf(Float.parseFloat(values[1].strip()))),
+                    new_record);
             // add all records to block and add to memory
             if (database.allocateRecordToBlock(block, new_record) == 0) {
                 blockAllocated++;
@@ -73,14 +75,17 @@ public class main {
                 block = new Block();
                 blockCreated++;
                 database.allocateRecordToBlock(block, new_record);
+                // tree.insertKey(Float.parseFloat(String.valueOf(Float.parseFloat(values[1].strip()))),
+                // new_record);
             }
         }
         if (blockCreated != blockAllocated) {
             database.allocateBlock(block);
+            // tree.insertKey(Float.parseFloat(String.valueOf(values[1])), new_record);
         }
 
         database.printRecords();
         database.printInformation();
-
+        tree.displayTreeInfo();
     }
 }
