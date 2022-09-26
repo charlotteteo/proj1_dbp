@@ -8,7 +8,7 @@ public class Node {
 	private Node prev;
 	private Node next;
 	private Node parent;
-	public boolean isLeaf;
+	public boolean internal;
 
 	public Node() {
 		this.keys = new ArrayList<>();
@@ -32,6 +32,10 @@ public class Node {
 		return children;
 	}
 
+	public int getNoOfKeys() {
+		return this.keys.size();
+	}
+
 	public void setChildren(List<Node> children) {
 		this.children = children;
 	}
@@ -51,7 +55,7 @@ public class Node {
 	public void setParent(Node parent) {
 		this.parent = parent;
 	}
-	
+
 	public Node getPrev() {
 		return prev;
 	}
@@ -59,8 +63,8 @@ public class Node {
 	public void setPrev(Node prev) {
 		this.prev = prev;
 	}
-		
-    // return node information
+
+	// return node information
 	@Override
 	public String toString() {
 		return "Keys: " + keys.toString();

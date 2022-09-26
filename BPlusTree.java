@@ -43,11 +43,11 @@ public class BPlusTree {
             Node newNode = new Node();
             newNode.getKeys().add(new Key(key, value));
             this.root = newNode;
-            this.root.isLeaf = true;
+            this.root.internal = false;
             this.root.setParent(null); // Since the root has no parent, parent set to null
         } else if (this.root.getChildren().isEmpty() && this.root.getKeys().size() < (this.m - 1)) {
             // 2: Node is Not Full
-            this.root.isLeaf = false;
+            this.root.internal = true;
             insertExternalNode(key, value, this.root);
         } else {
             // 3: Normal insert
@@ -83,14 +83,13 @@ public class BPlusTree {
             Key newKey = new Key(key, value);
             node.getKeys().add(index, newKey);
 
-            node.isLeaf = true; // Set Key isLeaf value
+            node.internal = false;
         }
     }
 
     private void splitExternalNode(Node curr, int m) {
 
-        // Set isLeaf of External Node
-        curr.isLeaf = true;
+        curr.internal = false;
 
         // Find the middle index
         int midIndex = m / 2;
@@ -100,7 +99,7 @@ public class BPlusTree {
 
         // Set the right part to have middle element and the elements right to the
         // middle element
-        rightNode.setKeys(curr.getKeys().subList(midIndex, curr.getKeys().size()));
+        rightNode.setKeys(curr.getKeys().subList(midIndex, curr.getNoOfKeys()));
         rightNode.setParent(middleNode);
 
         // Internal nodes do not contain values => Set only Keys
@@ -108,7 +107,7 @@ public class BPlusTree {
         middleNode.getChildren().add(rightNode);
 
         // Update the split node to contain just the left part
-        curr.getKeys().subList(midIndex, curr.getKeys().size()).clear();
+        curr.getKeys().subList(midIndex, curr.getNoOfKeys()).clear();
 
         boolean split = true;
         splitInternalNode(curr.getParent(), curr, m, middleNode, split);
@@ -141,7 +140,7 @@ public class BPlusTree {
             mergeInternalNodes(insertedNode, curr);
 
             // Split if internal node is full
-            if (curr.getKeys().size() == m) {
+            if (curr.getNoOfKeys() == m) {
                 int midIndex = (int) Math.ceil(m / 2.0) - 1;
                 Node middleNode = new Node();
                 Node rightNode = new Node();
@@ -296,85 +295,6 @@ public class BPlusTree {
         }
 
         return searchValues;
-    }
-
-    public List<Key> searchRange(float minKey, float maxKey) {
-
-        // Set access numbers to 0
-        indexNodesAccess = 0;
-        dataBlocksAccess = 0;
-        List<Key> searchKeys = new ArrayList<>();
-        Node curr = this.root;
-
-        indexNodesAccess++;
-        System.out.println("Index Node Access: Node= " + curr.getKeys());
-
-        while (curr.getChildren().size() != 0) {
-            indexNodesAccess++;
-            System.out.println("Index Node Access: Node= " + curr.getKeys());
-            curr = curr.getChildren().get(searchInternalNode(minKey, curr.getKeys()));
-        }
-
-        // Stop if value encountered in list is greater than key2
-        boolean endSearch = false;
-
-        while (null != curr && !endSearch) {
-            for (int i = 0; i < curr.getKeys().size(); i++) {
-
-                dataBlocksAccess++;
-                // System.out.println("Data Block Access: Key=" + curr.getKeys().get(i).getKey()
-                // + " |\n Value=" + curr.getKeys().get(i).getValues());
-
-                System.out.println("Data Block Access: Key= " + curr.getKeys().get(i).getKey());
-                System.out.println("Value Size= " + curr.getKeys().get(i).getValues().size() + " Records");
-                System.out.println("Value (0)= " + curr.getKeys().get(i).getValues().get(0));
-
-                if (curr.getKeys().get(i).getKey() >= minKey && curr.getKeys().get(i).getKey() <= maxKey)
-                    searchKeys.add(curr.getKeys().get(i));
-                if (curr.getKeys().get(i).getKey() > maxKey) {
-                    endSearch = true;
-                }
-            }
-            curr = curr.getNext();
-        }
-
-        return searchKeys;
-    }
-
-    public int countTreeIndexNodes() {
-        int countIndexNodes = 0;
-
-        Queue<Node> queue = new LinkedList<Node>();
-        queue.add(this.root);
-        queue.add(null);
-        Node curr = null;
-
-        while (!queue.isEmpty()) {
-            curr = queue.poll();
-            if (null == curr) {
-                queue.add(null);
-                if (queue.peek() == null) {
-                    break;
-                }
-                continue;
-            }
-
-            countIndexNodes++;
-
-            if (curr.getChildren().isEmpty()) {
-                break;
-            }
-            for (int i = 0; i < curr.getChildren().size(); i++) {
-                queue.add(curr.getChildren().get(i));
-            }
-        }
-
-        curr = curr.getNext();
-        while (null != curr) {
-            countIndexNodes++;
-            curr = curr.getNext();
-        }
-        return countIndexNodes;
     }
 
     public void displayTreeInfo() {
