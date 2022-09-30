@@ -253,6 +253,133 @@ public class BPlusTree {
         return index;
     }
 
+    public void deleteKey(float key) {
+
+        numDeleted = 0;
+        numMerged = 0;
+
+        Node curr = this.root;
+
+        // Minimum number of keys to balance the b-tree in the leaf node
+        int minKeysLeafNode = (int) Math.floor(m / 2.0);
+        System.out.println("Minimum number of keys in the leaf node: " + minKeysLeafNode);
+
+        // Minimum number of keys to balance the b-tree in the non-leaf node
+        int minKeysNonLeafNode = (int) Math.floor((m - 1) / 2.0);
+        System.out.println("Minimum number of keys in the non-leaf node: " + minKeysNonLeafNode);
+
+        // Minimum number of children node to balance the b-tree in the non-leaf node
+        int minChildrenNonLeafNode = (int) Math.ceil((m) / 2.0);
+        System.out.println("Minimum number of children in the non-leaf node: " + minChildrenNonLeafNode);
+
+        while (curr.getChildren().size() != 0) {
+            curr = curr.getChildren().get(searchInternalNode(key, curr.getKeys()));
+            System.out.println("curr: " + curr.getKeys());
+            System.out.println("curr children: " + curr.getChildren() + " | Size: " + curr.getChildren().size());
+
+            List<Key> keys = curr.getKeys();
+
+            if (curr.internal == true) {
+                System.out.println("=Internal=");
+                System.out.println("Here: " + keys + " | Size: " + keys.size());
+
+                System.out.println("Children: " + curr.getChildren());
+
+                // If key is in non-leaf node, remove key
+                for (int i = 0; i < keys.size(); i++) {
+                    if (keys.get(i).getKey() == key) {
+                        System.out.println("Removed");
+                        keys.remove(i);
+                    }
+                }
+
+                // if key size is less than min. keys required in non leaf node
+                if (keys.size() < minKeysNonLeafNode) {
+                    Node firstChildrenNode = curr.getChildren().get(0);
+                    System.out.println("Children Key: " + firstChildrenNode.getKeys());
+                    curr.setKeys(firstChildrenNode.getKeys());
+
+                }
+
+            } else {
+                System.out.println("=Leaf=");
+                System.out.println("Here: " + keys + " | Size: " + keys.size());
+
+                // If key is in leaf node, remove key
+                for (int i = 0; i < keys.size(); i++) {
+                    if (keys.get(i).getKey() == key) {
+                        keys.remove(i);
+                    }
+                }
+
+                List<Node> nodeList = curr.getParent().getChildren();
+
+                System.out.println("Curr: " + curr.getParent().getChildren());
+                for (int i = 0; i < nodeList.size(); i++) {
+                    if (nodeList.get(i).getKeys().size() == 0) {
+                        nodeList.remove(i);
+                    }
+                }
+
+                // 1: If node has less than ceil(m/2):
+                if (keys.size() < minKeysLeafNode) {
+                    System.out.println("Not enough keys in node");
+                    System.out.println("Parent: " + curr.getParent());
+                    System.out.println("Next Sibling: " + curr.getNext());
+                    System.out.println("Prev Sibling: " + curr.getPrev());
+
+                    // See if sibling can lend a key
+                    // If can borrow, borrow key and adjust parent node keys
+                    Node nextNode = curr.getNext();
+                    Node prevNode = curr.getPrev();
+                    Node parentNode = curr.getParent();
+
+                    /*
+                     * // If can borrow a key from left or right sibling, adjust keys in leaf node
+                     * and its parent node //1) Check left sibling first, if cannot borrow //2)
+                     * Check right sibling
+                     * 
+                     * int st = 0; int end = prevNode.getKeys().size() - 1;
+                     * if(prevNode.getKeys().size() - 1 > minKeysLeafNode) { // Add the last element
+                     * key of left sibling to current node keys.add(st,
+                     * prevNode.getKeys().get(end));
+                     * 
+                     * // Update smallest key of current node to parent node for(int i = 0; i <
+                     * parentNode.getKeys().size(); i++) { // Find the previous smallest key of
+                     * current node in the parent node if(parentNode.getKeys().get(i).getKey() ==
+                     * key) { // Get the new smallest key of current node at index position 0 and
+                     * update the new smallest key in the parent node
+                     * parentNode.getKeys().get(i).setKey(keys.get(st).getKey()); } } } else
+                     * if(nextNode.getKeys().size() - 1 > minKeysLeafNode) { // Add the first
+                     * element key of right sibling to current node
+                     * keys.add(nextNode.getKeys().get(st)); }
+                     */
+
+                    // If cannot borrow, merge with sibling & adjust parent node keys
+
+                    if (parentNode != null) {
+                        System.out.println("Parent Children: " + curr.getParent().getChildren());
+
+                    }
+
+                } else {
+                    // If smallest key is deleted push up the next key
+
+                    Node parentNode = curr.getParent();
+                    for (int i = 0; i < parentNode.getKeys().size(); i++) {
+                        // Find the previous smallest key of current node in the parent node
+                        if (parentNode.getKeys().get(i).getKey() == key) {
+                            // Get the new smallest key of current node at index position 0 and update the
+                            // new smallest key in the parent node
+                            parentNode.getKeys().get(i).setKey(keys.get(0).getKey());
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
     public List<Record> searchKey(float key) {
 
         // Set access numbers to 0
@@ -378,4 +505,12 @@ public class BPlusTree {
 
     }
 
+    public void displayHeightInfo() {
+		System.out.println("Tree height = " + height);
+	}
+
+    public void displayUpdatedNodesInfo() {
+		System.out.println("No. of deleted nodes = " + numDeleted);
+		System.out.println("No. of merged nodes = " + numMerged);
+	}
 }
