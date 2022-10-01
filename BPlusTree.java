@@ -338,12 +338,12 @@ public class BPlusTree {
                      * // If can borrow a key from left or right sibling, adjust keys in leaf node
                      * and its parent node //1) Check left sibling first, if cannot borrow //2)
                      * Check right sibling
-                     * 
+                     *
                      * int st = 0; int end = prevNode.getKeys().size() - 1;
                      * if(prevNode.getKeys().size() - 1 > minKeysLeafNode) { // Add the last element
                      * key of left sibling to current node keys.add(st,
                      * prevNode.getKeys().get(end));
-                     * 
+                     *
                      * // Update smallest key of current node to parent node for(int i = 0; i <
                      * parentNode.getKeys().size(); i++) { // Find the previous smallest key of
                      * current node in the parent node if(parentNode.getKeys().get(i).getKey() ==
@@ -412,16 +412,16 @@ public class BPlusTree {
                 System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
                 System.out.println("Value = " + keyList.get(i).getValues());
                 dataBlocksAccess++;
-                
+
                 searchValues = keyList.get(i).getValues();
 
             }
             if (key < keyList.get(i).getKey()) {
                 break;
             }
-            
+
         }
-        
+
         return searchValues;
     }
 
@@ -470,7 +470,7 @@ public class BPlusTree {
             curr = curr.getNext();
         }
         System.out.println("\nTotal number of nodes in B+ tree is: " + numOfNodes);
-       // System.out.println("Total number of records in B+ tree is: " + recordsCountTotal);
+        // System.out.println("Total number of records in B+ tree is: " + recordsCountTotal);
     }
 
     private void displayNodeInfo(Node curr) {
@@ -507,13 +507,13 @@ public class BPlusTree {
     }
 
     public void displayHeightInfo() {
-		System.out.println("Tree height = " + height);
-	}
+        System.out.println("Tree height = " + height);
+    }
 
     public void displayUpdatedNodesInfo() {
-		System.out.println("No. of deleted nodes = " + numDeleted);
-		System.out.println("No. of merged nodes = " + numMerged);
-	}
+        System.out.println("No. of deleted nodes = " + numDeleted);
+        System.out.println("No. of merged nodes = " + numMerged);
+    }
     public List<List<Record>> searchKeyRange(float minkey, float maxkey) {
 
         // Set access numbers to 0
@@ -548,7 +548,9 @@ public class BPlusTree {
                     if(dataBlocksAccess < 5) {
                         System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
                         System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
-                        System.out.println("Value (0) = " + keyList.get(i).getValues().get(0));
+                        System.out.println("Value = " + keyList.get(i).getValues().get(0));
+                        System.out.println("Value = " + keyList.get(i).getValues().get(0).getTConst());
+
                     }
                     dataBlocksAccess++;
 
@@ -583,9 +585,9 @@ public class BPlusTree {
     public void printIndexNodeAccess() {
         System.out.println("Number of Index Nodes Access: " + indexNodesAccess);
     }
-    
+
     public void printDataBlockAccess() {
         System.out.println("Number of Data Block Access: " + dataBlocksAccess);
     }
-    
+
 }
