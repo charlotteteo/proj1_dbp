@@ -61,7 +61,7 @@ public class Database {
         }
 
         else {
-            System.out.println(newBlk + "full");
+            //System.out.println(newBlk + "full");
             return 0;
         }
     }
@@ -70,7 +70,7 @@ public class Database {
         this.totalNoOfBlocksAvail--;
         this.totalNoOfBlocksUsed++;
         memoryBlock.add(newBlk);
-        System.out.println("Allocated " + newBlk + " to Memory");
+       // System.out.println("Allocated " + newBlk + " to Memory");
     }
 
     public void deallocateBlock(Block newBlk) {

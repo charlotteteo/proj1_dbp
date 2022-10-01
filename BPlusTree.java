@@ -390,13 +390,13 @@ public class BPlusTree {
 
         Node curr = this.root;
         indexNodesAccess++;
-        System.out.println("Index Node Access: Node= " + curr.getKeys());
+        System.out.println("Index Node Access: Node = " + curr.getKeys());
 
         // Traverse to the corresponding external node that would contain this key
         while (curr.getChildren().size() != 0) {
             curr = curr.getChildren().get(searchInternalNode(key, curr.getKeys()));
             indexNodesAccess++;
-            System.out.println("Index Node Access: Node= " + curr.getKeys());
+            System.out.println("Index Node Access: Node = " + curr.getKeys());
         }
 
         List<Key> keyList = curr.getKeys();
@@ -408,12 +408,13 @@ public class BPlusTree {
 
             if (key == keyList.get(i).getKey()) {
 
-                System.out.println("Data Block Access: Key=" + keyList.get(i).getKey());
-                System.out.println("Value Size=" + keyList.get(i).getValues().size() + " Records");
-                System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
+                System.out.println("Data Block Access: NumVotes = " + keyList.get(i).getKey());
+                System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
+                System.out.println("Value (0) = " + keyList.get(i).getValues().get(0));
                 dataBlocksAccess++;
 
                 searchValues = keyList.get(i).getValues();
+                
 
             }
             if (key < keyList.get(i).getKey()) {
@@ -513,4 +514,13 @@ public class BPlusTree {
 		System.out.println("No. of deleted nodes = " + numDeleted);
 		System.out.println("No. of merged nodes = " + numMerged);
 	}
+
+    public void printIndexNodeAccess() {
+        System.out.println("Number of Index Nodes Access: " + indexNodesAccess);
+    }
+    
+    public void printDataBlockAccess() {
+        System.out.println("Number of Data Block Access: " + dataBlocksAccess);
+    }
+    
 }

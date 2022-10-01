@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.List;
 
 public class main {
 
@@ -54,14 +55,12 @@ public class main {
                     // Initialise Database
                     num = 200;
                     database = new Database(100000000, 200);
-                    database.printInformation();
                     exit = true;
                     optionSelected = true;
                     break;
                 case 2:
-                    num = 200;
+                    num = 500;
                     database = new Database(100000000, 500);
-                    database.printInformation();
                     exit = true;
                     optionSelected = true;
                     break;
@@ -79,7 +78,7 @@ public class main {
         if (optionSelected == true) {
 
             // File text = new File("./data-2.tsv");
-            File text = new File("./data-sample.tsv");
+            File text = new File("./data-2.tsv");
             // File text = new File("./data-2.tsv");
             // Creating Scanner instance to read File in Java
             Scanner scnr = new Scanner(text);
@@ -87,7 +86,8 @@ public class main {
             // Reading each line of the file using Scanner class
 
             String line = scnr.nextLine();
-            BPlusTree tree = new BPlusTree((int) num / 12);
+            int n = (int) (num - 8) / 12;
+            BPlusTree tree = new BPlusTree(n);
             Block block = new Block();
             // keep track of not allocated block
             int blockCreated = 1;
@@ -96,18 +96,18 @@ public class main {
                 line = scnr.nextLine();
                 String[] values = line.split("\t");
                 Record new_record = new Record(values[0], Float.parseFloat(values[1].strip()),
-                        Integer.parseInt(values[2].strip()));
-                tree.insertKey(Float.parseFloat(String.valueOf(Float.parseFloat(values[2].strip()))),
-                        new_record);
+                    Integer.parseInt(values[2].strip()));
+                tree.insertKey(Integer.parseInt(String.valueOf(Integer.parseInt(values[2].strip()))),
+                    new_record);
                 // add all records to block and add to memory
                 if (database.allocateRecordToBlock(block, new_record) == 0) {
-                    blockAllocated++;
+                   blockAllocated++;
                     database.allocateBlock(block);
                     block = new Block();
                     blockCreated++;
                     database.allocateRecordToBlock(block, new_record);
-                    // tree.insertKey(Float.parseFloat(String.valueOf(Float.parseFloat(values[1].strip()))),
-                    // new_record);
+                    //tree.insertKey(Float.parseFloat(String.valueOf(Float.parseFloat(values[1].strip()))),
+                    //new_record);
                 }
             }
             if (blockCreated != blockAllocated) {
@@ -115,7 +115,7 @@ public class main {
                 // tree.insertKey(Float.parseFloat(String.valueOf(values[1])), new_record);
             }
             System.out.println("Reading file...");
-            //database.printRecords();
+            // database.printRecords();
             // database.printInformation();
             // tree.displayTreeInfo();
             System.out.println("File read");
@@ -141,11 +141,28 @@ public class main {
                         case 2:
                             System.out.println("----Experiment 2----");
                             tree.displayTreeInfo();
+                            System.out.println("The parameter n of the B+ tree = " + n);
+                            tree.displayHeightInfo();
                             break;
                         case 3:
                             System.out.println("----Experiment 3----");
-                            // INSERT EXP 3 CODES/PRINT STATEMENTS
+                            List<Record> searchValues = tree.searchKey(500);
+                            tree.printIndexNodeAccess();
+                            tree.printDataBlockAccess();
+                            float sum = 0;
+                            System.out.println("List of tconst: ");
+                            for (int j = 0; j < searchValues.size(); j++) {
 
+                                System.out.print(searchValues.get(j).getTConst() + " ");
+                                sum = sum + searchValues.get(j).getAverageRating();
+                                if (j % 100 == 0 && j != 0) {
+                                    System.out.print("\n");
+                                }
+
+                            }
+                            float average = sum / searchValues.size();
+                            System.out.print("\n");
+                            System.out.println("Average of averageRating: " + average);
                             break;
                         case 4:
                             System.out.println("----Experiment 4----");
