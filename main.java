@@ -146,6 +146,7 @@ public class main {
                             System.out.println("----Experiment 3----");
                             List<Record> searchValues = tree.searchKey(500);
                             float sum = 0;
+                            System.out.print("TConst = ");
                             for (int j = 0; j < searchValues.size(); j++) {
                                 System.out.print(searchValues.get(j).getTConst() + " ");
                                 sum = sum + searchValues.get(j).getAverageRating();
