@@ -46,24 +46,23 @@ public class main {
         if (optionSelected == true) {
 
             File text = new File("./data-2.tsv");
-            Scanner scnr = new Scanner(text);
+            Scanner scanner = new Scanner(text);
 
-            String line = scnr.nextLine();
+            String line = scanner.nextLine();
             int n = (int) (num - 8) / 12;
             BPlusTree tree = new BPlusTree(n);
             Block block = new Block();
 
             int blockCreated = 1;
             int blockAllocated = 0;
-            while (scnr.hasNextLine()) {
-                line = scnr.nextLine();
+            while (scanner.hasNextLine()) {
+                line = scanner.nextLine();
                 String[] values = line.split("\t");
                 Record new_record = new Record(values[0], Float.parseFloat(values[1].strip()),
-                    Integer.parseInt(values[2].strip()));
-                tree.insertNodeKey(Integer.parseInt(String.valueOf(Integer.parseInt(values[2].strip()))),
-                    new_record);
+                        Integer.parseInt(values[2].strip()));
+                tree.insertNodeKey(new_record, Integer.parseInt(String.valueOf(Integer.parseInt(values[2].strip()))));
                 if (database.allocateRecordToBlock(block, new_record) == 0) {
-                   blockAllocated++;
+                    blockAllocated++;
                     database.allocateBlock(block);
                     block = new Block();
                     blockCreated++;
@@ -105,8 +104,8 @@ public class main {
                             for (int j = 0; j < searchValues.size(); j++) {
                                 System.out.print("TConst = ");
                                 System.out.print(searchValues.get(j).getTConst() + " " + " AverageRating = " +
-                                searchValues.get(j).getAverageRating() + " " + "NumVotes = " +
-                                searchValues.get(j).getNumVotes() + " ");
+                                        searchValues.get(j).getAverageRating() + " " + "NumVotes = " +
+                                        searchValues.get(j).getNumVotes() + " ");
                                 System.out.print("\n");
                                 sum = sum + searchValues.get(j).getAverageRating();
                             }
@@ -126,21 +125,21 @@ public class main {
                         case 5:
                             System.out.println("----Experiment 5----");
                             tree.deleteNodeKey(1000);
-							tree.printTree();
-							tree.printHeightInfo();
-							tree.printUpdatedNodesInfo();
+                            tree.printTree();
+                            tree.printHeightInfo();
+                            tree.printUpdatedNodesInfo();
                             break;
                         case 6:
                             // Close all scanner at the end
                             expScanner.close();
-                            scnr.close();
+                            scanner.close();
                             scan.close();
                             exitExperiment = true;
                             break;
                         default:
                             // Close all scanner at the end
                             expScanner.close();
-                            scnr.close();
+                            scanner.close();
                             scan.close();
                             exitExperiment = true;
                             break;
