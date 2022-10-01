@@ -414,7 +414,9 @@ public class BPlusTree {
                 dataBlocksAccess++;
 
                 searchValues = keyList.get(i).getValues();
-                
+                for (int j = 0; j < keyList.get(i).getValues().size(); j++) {
+                    keyList.get(i).getValues().get(j).printRecord();
+                }
 
             }
             if (key < keyList.get(i).getKey()) {

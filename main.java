@@ -150,18 +150,10 @@ public class main {
                             tree.printIndexNodeAccess();
                             tree.printDataBlockAccess();
                             float sum = 0;
-                            System.out.println("List of tconst: ");
                             for (int j = 0; j < searchValues.size(); j++) {
-
-                                System.out.print(searchValues.get(j).getTConst() + " ");
                                 sum = sum + searchValues.get(j).getAverageRating();
-                                if (j % 100 == 0 && j != 0) {
-                                    System.out.print("\n");
-                                }
-
                             }
                             float average = sum / searchValues.size();
-                            System.out.print("\n");
                             System.out.println("Average of averageRating: " + average);
                             break;
                         case 4:
