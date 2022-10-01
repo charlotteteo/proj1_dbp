@@ -410,13 +410,10 @@ public class BPlusTree {
 
                 System.out.println("Data Block Access: NumVotes = " + keyList.get(i).getKey());
                 System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
-                System.out.println("Value (0) = " + keyList.get(i).getValues().get(0));
+                System.out.println("Value (0) = " + keyList.get(i).getValues());
                 dataBlocksAccess++;
 
                 searchValues = keyList.get(i).getValues();
-                for (int j = 0; j < keyList.get(i).getValues().size(); j++) {
-                    keyList.get(i).getValues().get(j).printRecord();
-                }
 
             }
             if (key < keyList.get(i).getKey()) {
@@ -472,14 +469,14 @@ public class BPlusTree {
             curr = curr.getNext();
         }
         System.out.println("\nTotal number of nodes in B+ tree is: " + numOfNodes);
-        System.out.println("Total number of records in B+ tree is: " + recordsCountTotal);
+       // System.out.println("Total number of records in B+ tree is: " + recordsCountTotal);
     }
 
     private void displayNodeInfo(Node curr) {
 
         for (int i = 0; i < curr.getKeys().size(); i++) {
             recordsCountInANode = 0;
-            System.out.print(curr.getKeys().get(i).getKey() + ":(");
+            System.out.print(curr.getKeys().get(i).getKey() + " ");
             String values = "";
             for (int j = 0; j < curr.getKeys().get(i).getValues().size(); j++) {
                 values = values + curr.getKeys().get(i).getValues().get(j) + ",";
@@ -499,7 +496,7 @@ public class BPlusTree {
             // ");\n");
             // System.out.print(values.isEmpty() ? ");" : uniqueKeysCount++ + ")" + "(" +
             // recordsCountInANode + ");");
-            System.out.print(values.isEmpty() ? ");" : recordsCountInANode + ");");
+            System.out.print(values.isEmpty() ? " " : recordsCountInANode + " ");
         }
 
         if (curr.getKeys().size() != 0) {

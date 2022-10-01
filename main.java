@@ -106,8 +106,8 @@ public class main {
                     block = new Block();
                     blockCreated++;
                     database.allocateRecordToBlock(block, new_record);
-                    //tree.insertKey(Float.parseFloat(String.valueOf(Float.parseFloat(values[1].strip()))),
-                    //new_record);
+                    tree.insertKey(Integer.parseInt(String.valueOf(Integer.parseInt(values[2].strip()))),
+                    new_record);
                 }
             }
             if (blockCreated != blockAllocated) {
