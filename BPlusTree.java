@@ -410,7 +410,7 @@ public class BPlusTree {
 
                 System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
                 System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
-                System.out.println("Value (0) = " + keyList.get(i).getValues());
+                System.out.println("Value = " + keyList.get(i).getValues());
                 dataBlocksAccess++;
                 
                 searchValues = keyList.get(i).getValues();

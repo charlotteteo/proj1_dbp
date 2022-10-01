@@ -152,9 +152,9 @@ public class main {
                             }
                             float average = sum / searchValues.size();
                             System.out.print("\n");
+                            System.out.println("Average of averageRating: " + average);
                             tree.printIndexNodeAccess();
                             tree.printDataBlockAccess();
-                            System.out.println("Average of averageRating: " + average);
                             break;
                         case 4:
                             System.out.println("----Experiment 4----");
