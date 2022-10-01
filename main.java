@@ -145,13 +145,15 @@ public class main {
                         case 3:
                             System.out.println("----Experiment 3----");
                             List<Record> searchValues = tree.searchKey(500);
-                            tree.printIndexNodeAccess();
-                            tree.printDataBlockAccess();
                             float sum = 0;
                             for (int j = 0; j < searchValues.size(); j++) {
+                                System.out.print(searchValues.get(j).getTConst() + " ");
                                 sum = sum + searchValues.get(j).getAverageRating();
                             }
                             float average = sum / searchValues.size();
+                            System.out.print("\n");
+                            tree.printIndexNodeAccess();
+                            tree.printDataBlockAccess();
                             System.out.println("Average of averageRating: " + average);
                             break;
                         case 4:
