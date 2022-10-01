@@ -526,19 +526,19 @@ public class BPlusTree {
 
         Node curr = this.root;
         indexNodesAccess++;
-        System.out.println("Index Node Access: Node= " + curr.getKeys());
+//        System.out.println("Index Node Access: Node= " + curr.getKeys());
 
         // Traverse to the corresponding external node that would contain this key
         while (curr.getChildren().size() != 0) {
             curr = curr.getChildren().get(searchInternalNode(minkey, curr.getKeys()));
             indexNodesAccess++;
-            System.out.println("Index Node Access: Node= " + curr.getKeys());
+//            System.out.println("Index Node Access: Node= " + curr.getKeys());
         }
 
         List<Key> keyList = curr.getKeys();
-        for (int i = 0; i < keyList.size(); i++) {
-            System.out.println(keyList.get(i).getKey());
-        }
+//        for (int i = 0; i < keyList.size(); i++) {
+//            System.out.println(keyList.get(i).getKey());
+//        }
 
         Boolean flag = true;
 
@@ -548,15 +548,15 @@ public class BPlusTree {
                 // dataBlocksAccess++;
                 if (minkey <= keyList.get(i).getKey() && maxkey >= keyList.get(i).getKey()) {
 
-                    System.out.println("Data Block Access: Key=" + keyList.get(i).getKey());
-                    System.out.println("Value Size=" + keyList.get(i).getValues().size() + " Records");
-                    System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
+//                    System.out.println("Data Block Access: Key=" + keyList.get(i).getKey());
+//                    System.out.println("Value Size=" + keyList.get(i).getValues().size() + " Records");
+//                    System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
                     dataBlocksAccess++;
 
                     searchValues.add(keyList.get(i).getValues());
-                    for (int j = 0; j < keyList.get(i).getValues().size(); j++) {
-                        keyList.get(i).getValues().get(j).printRecord();
-                    }
+//                    for (int j = 0; j < keyList.get(i).getValues().size(); j++) {
+//                        keyList.get(i).getValues().get(j).printRecord();
+//                    }
 
                 }
                 if (maxkey < keyList.get(i).getKey()) {
@@ -569,7 +569,8 @@ public class BPlusTree {
             }
             keyList = curr.getKeys();
         }
-        for (int i = 0; i < searchValues.size(); i++) {
+        int maxRecordsShown = searchValues.size() > 5 ? 5 : searchValues.size();
+        for (int i = 0; i < 5; i++) {
             for (int j = 0; j < searchValues.get(i).size(); j++) {
                 searchValues.get(i).get(j).printRecord();
             }
