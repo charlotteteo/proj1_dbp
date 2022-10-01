@@ -544,7 +544,7 @@ public class BPlusTree {
 
                 // dataBlocksAccess++;
                 if (minkey <= keyList.get(i).getKey() && maxkey >= keyList.get(i).getKey()) {
-                    if(dataBlocksAccess <6) {
+                    if(dataBlocksAccess < 5) {
                         System.out.println("Data Block Access: Key=" + keyList.get(i).getKey());
                         System.out.println("Value Size=" + keyList.get(i).getValues().size() + " Records");
                         System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
