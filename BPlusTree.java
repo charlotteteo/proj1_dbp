@@ -534,13 +534,13 @@ public class BPlusTree {
         }
 
         List<Key> keyList = curr.getKeys();
-        for (int i = 0; i<keyList.size();i++){
+        for (int i = 0; i < keyList.size(); i++) {
             System.out.println(keyList.get(i).getKey());
         }
 
         Boolean flag = true;
 
-        while (flag){
+        while (flag) {
             for (int i = 0; i < keyList.size(); i++) {
 
                 // dataBlocksAccess++;
@@ -562,16 +562,18 @@ public class BPlusTree {
                 }
             }
             curr = curr.getNext();
-            if (curr == null){
+            if (curr == null) {
                 break;
             }
             keyList = curr.getKeys();
         }
-        for(int i=0; i<searchValues.size(); i++) {
+        for (int i = 0; i < searchValues.size(); i++) {
             for (int j = 0; j < searchValues.get(i).size(); j++) {
                 searchValues.get(i).get(j).printRecord();
             }
         }
+        return searchValues;
+    }
 
     public void printIndexNodeAccess() {
         System.out.println("Number of Index Nodes Access: " + indexNodesAccess);
