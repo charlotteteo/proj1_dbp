@@ -15,9 +15,9 @@ public class Block {
 	}
 
 	public void setRecords(List<Record> records) {
-		Iterator<Record> iter = records.iterator();
-		while (iter.hasNext()) {
-			this.records.add(iter.next());
+		Iterator<Record> iterator = records.iterator();
+		while (iterator.hasNext()) {
+			this.records.add(iterator.next());
 		}
 	}
 

@@ -1,7 +1,4 @@
 import java.util.List;
-import java.io.*;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 public class Database {
@@ -47,8 +44,6 @@ public class Database {
     }
 
     public int allocateRecordToBlock(Block newBlk, Record rec) {
-
-        // Block newBlk = new Block();
         blk = newBlk;
         // ADD NEW RECORD INTO BLOCK
         if (blk.getNumberOfRecords() < this.recordsPerBlock) {
@@ -61,7 +56,7 @@ public class Database {
         }
 
         else {
-            //System.out.println(newBlk + "full");
+            // System.out.println(newBlk + "full");
             return 0;
         }
     }
@@ -70,7 +65,7 @@ public class Database {
         this.totalNoOfBlocksAvail--;
         this.totalNoOfBlocksUsed++;
         memoryBlock.add(newBlk);
-       // System.out.println("Allocated " + newBlk + " to Memory");
+        // System.out.println("Allocated " + newBlk + " to Memory");
     }
 
     public void deallocateBlock(Block newBlk) {
@@ -85,16 +80,16 @@ public class Database {
     }
 
     public void printInformation() {
-        System.out.println("overall memory size:" + diskSize + " bytes");
-        System.out.println("overall block size:" + blockSize + " bytes");
+        System.out.println("Overall memory size:" + diskSize + " bytes");
+        System.out.println("Overall block size:" + blockSize + " bytes");
         System.out.println("Each record size:" + recordSize + " bytes");
-        System.out.println("overall available size:" + availableSize + " bytes");
-        System.out.println("overall used size:" + usedSize + " bytes");
-        System.out.println("total number of blocks:" + totalNoOfBlocks);
-        System.out.println("total number of blocks avail:" + totalNoOfBlocksAvail);
-        System.out.println("total number of blocks used:" + totalNoOfBlocksUsed);
-        System.out.println("total number of records:" + totalNoOfRecords);
-        System.out.println("record size:" + totalRecordSize + " bytes");
+        System.out.println("Overall available size:" + availableSize + " bytes");
+        System.out.println("Overall used size:" + usedSize + " bytes");
+        System.out.println("Total number of blocks:" + totalNoOfBlocks);
+        System.out.println("Total number of blocks avail:" + totalNoOfBlocksAvail);
+        System.out.println("Total number of blocks used:" + totalNoOfBlocksUsed);
+        System.out.println("Total number of records:" + totalNoOfRecords);
+        System.out.println("Record size:" + totalRecordSize + " bytes");
     }
 
     public void printRecords() {

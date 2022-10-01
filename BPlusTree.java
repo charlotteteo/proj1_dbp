@@ -128,11 +128,11 @@ public class BPlusTree {
             if (split) {
                 // Update the linked list only for first split (for external node)
                 if (prevIndex == 0) {
-                    insertedNode.getChildren().get(0).setNext(insertedNode.getChildren().get(1));
-                    insertedNode.getChildren().get(1).setPrev(insertedNode.getChildren().get(0));
+                    insertedNode.getChildren().get(0).setNextNode(insertedNode.getChildren().get(1));
+                    insertedNode.getChildren().get(1).setPreviousNode(insertedNode.getChildren().get(0));
                 } else {
-                    insertedNode.getChildren().get(prevIndex + 1).setPrev(insertedNode.getChildren().get(prevIndex));
-                    insertedNode.getChildren().get(prevIndex - 1).setNext(insertedNode.getChildren().get(prevIndex));
+                    insertedNode.getChildren().get(prevIndex + 1).setPreviousNode(insertedNode.getChildren().get(prevIndex));
+                    insertedNode.getChildren().get(prevIndex - 1).setNextNode(insertedNode.getChildren().get(prevIndex));
                 }
             }
         } else {
@@ -199,20 +199,20 @@ public class BPlusTree {
         if (!nodeTo.getChildren().isEmpty() && nodeTo.getChildren().get(0).getChildren().isEmpty()) {
 
             if (nodeTo.getChildren().size() - 1 != childInsertPos
-                    && nodeTo.getChildren().get(childInsertPos + 1).getPrev() == null) {
-                nodeTo.getChildren().get(childInsertPos + 1).setPrev(nodeTo.getChildren().get(childInsertPos));
-                nodeTo.getChildren().get(childInsertPos).setNext(nodeTo.getChildren().get(childInsertPos + 1));
-            } else if (0 != childInsertPos && nodeTo.getChildren().get(childInsertPos - 1).getNext() == null) {
-                nodeTo.getChildren().get(childInsertPos).setPrev(nodeTo.getChildren().get(childInsertPos - 1));
-                nodeTo.getChildren().get(childInsertPos - 1).setNext(nodeTo.getChildren().get(childInsertPos));
+                    && nodeTo.getChildren().get(childInsertPos + 1).getPreviousNode() == null) {
+                nodeTo.getChildren().get(childInsertPos + 1).setPreviousNode(nodeTo.getChildren().get(childInsertPos));
+                nodeTo.getChildren().get(childInsertPos).setNextNode(nodeTo.getChildren().get(childInsertPos + 1));
+            } else if (0 != childInsertPos && nodeTo.getChildren().get(childInsertPos - 1).getNextNode() == null) {
+                nodeTo.getChildren().get(childInsertPos).setPreviousNode(nodeTo.getChildren().get(childInsertPos - 1));
+                nodeTo.getChildren().get(childInsertPos - 1).setNextNode(nodeTo.getChildren().get(childInsertPos));
             } else {
                 // Merge is in between, then the next and the previous element's prev and next
                 // pointers have to be updated
                 nodeTo.getChildren().get(childInsertPos)
-                        .setNext(nodeTo.getChildren().get(childInsertPos - 1).getNext());
-                nodeTo.getChildren().get(childInsertPos).getNext().setPrev(nodeTo.getChildren().get(childInsertPos));
-                nodeTo.getChildren().get(childInsertPos - 1).setNext(nodeTo.getChildren().get(childInsertPos));
-                nodeTo.getChildren().get(childInsertPos).setPrev(nodeTo.getChildren().get(childInsertPos - 1));
+                        .setNextNode(nodeTo.getChildren().get(childInsertPos - 1).getNextNode());
+                nodeTo.getChildren().get(childInsertPos).getNextNode().setPreviousNode(nodeTo.getChildren().get(childInsertPos));
+                nodeTo.getChildren().get(childInsertPos - 1).setNextNode(nodeTo.getChildren().get(childInsertPos));
+                nodeTo.getChildren().get(childInsertPos).setPreviousNode(nodeTo.getChildren().get(childInsertPos - 1));
             }
         }
 
@@ -325,13 +325,13 @@ public class BPlusTree {
                 if (keys.size() < minKeysLeafNode) {
                     System.out.println("Not enough keys in node");
                     System.out.println("Parent: " + curr.getParent());
-                    System.out.println("Next Sibling: " + curr.getNext());
-                    System.out.println("Prev Sibling: " + curr.getPrev());
+                    System.out.println("Next Sibling: " + curr.getNextNode());
+                    System.out.println("Prev Sibling: " + curr.getPreviousNode());
 
                     // See if sibling can lend a key
                     // If can borrow, borrow key and adjust parent node keys
-                    Node nextNode = curr.getNext();
-                    Node prevNode = curr.getPrev();
+                    Node nextNode = curr.getNextNode();
+                    Node prevNode = curr.getPreviousNode();
                     Node parentNode = curr.getParent();
 
                     /*
@@ -463,11 +463,11 @@ public class BPlusTree {
             }
         }
 
-        curr = curr.getNext();
+        curr = curr.getNextNode();
         while (null != curr) {
             displayNodeInfo(curr);
             numOfNodes++;
-            curr = curr.getNext();
+            curr = curr.getNextNode();
         }
         System.out.println("\nTotal number of nodes in B+ tree is: " + numOfNodes);
         // System.out.println("Total number of records in B+ tree is: " + recordsCountTotal);
@@ -564,7 +564,7 @@ public class BPlusTree {
                     break;
                 }
             }
-            curr = curr.getNext();
+            curr = curr.getNextNode();
             if (curr == null) {
                 break;
             }

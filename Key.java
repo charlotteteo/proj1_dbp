@@ -36,6 +36,6 @@ public class Key {
 
     // print key information
 	public String toString() {
-		return "<KEY>[Key = " + key +  "] ";
+		return "" + key +  "";
 	}
 }
