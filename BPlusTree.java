@@ -514,6 +514,64 @@ public class BPlusTree {
 		System.out.println("No. of deleted nodes = " + numDeleted);
 		System.out.println("No. of merged nodes = " + numMerged);
 	}
+    public List<List<Record>> searchKeyRange(float minkey, float maxkey) {
+
+        // Set access numbers to 0
+        dataBlocksAccess = 0;
+        indexNodesAccess = 0;
+
+        List<List<Record>> searchValues = new ArrayList<>();
+
+        Node curr = this.root;
+        indexNodesAccess++;
+        System.out.println("Index Node Access: Node= " + curr.getKeys());
+
+        // Traverse to the corresponding external node that would contain this key
+        while (curr.getChildren().size() != 0) {
+            curr = curr.getChildren().get(searchInternalNode(minkey, curr.getKeys()));
+            indexNodesAccess++;
+            System.out.println("Index Node Access: Node= " + curr.getKeys());
+        }
+
+        List<Key> keyList = curr.getKeys();
+        for (int i = 0; i<keyList.size();i++){
+            System.out.println(keyList.get(i).getKey());
+        }
+
+        Boolean flag = true;
+
+        while (flag){
+            for (int i = 0; i < keyList.size(); i++) {
+
+                // dataBlocksAccess++;
+                if (minkey <= keyList.get(i).getKey() && maxkey >= keyList.get(i).getKey()) {
+
+                    System.out.println("Data Block Access: Key=" + keyList.get(i).getKey());
+                    System.out.println("Value Size=" + keyList.get(i).getValues().size() + " Records");
+                    System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
+                    dataBlocksAccess++;
+
+                    searchValues.add(keyList.get(i).getValues());
+                    for (int j = 0; j < keyList.get(i).getValues().size(); j++) {
+                        keyList.get(i).getValues().get(j).printRecord();
+                    }
+
+                }
+                if (maxkey < keyList.get(i).getKey()) {
+                    break;
+                }
+            }
+            curr = curr.getNext();
+            if (curr == null){
+                break;
+            }
+            keyList = curr.getKeys();
+        }
+        for(int i=0; i<searchValues.size(); i++) {
+            for (int j = 0; j < searchValues.get(i).size(); j++) {
+                searchValues.get(i).get(j).printRecord();
+            }
+        }
 
     public void printIndexNodeAccess() {
         System.out.println("Number of Index Nodes Access: " + indexNodesAccess);

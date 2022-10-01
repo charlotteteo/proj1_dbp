@@ -167,6 +167,9 @@ public class main {
                         case 4:
                             System.out.println("----Experiment 4----");
                             // INSERT EXP 4 CODES/PRINT STATEMENTS
+                            tree.searchKeyRange(30000, 40000);
+                            tree.printIndexNodeAccess();
+                            tree.printDataBlockAccess();
 
                             break;
                         case 5:
