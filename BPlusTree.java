@@ -526,13 +526,13 @@ public class BPlusTree {
 
         Node curr = this.root;
         indexNodesAccess++;
-//        System.out.println("Index Node Access: Node= " + curr.getKeys());
+        System.out.println("Index Node Access: Node= " + curr.getKeys());
 
         // Traverse to the corresponding external node that would contain this key
         while (curr.getChildren().size() != 0) {
             curr = curr.getChildren().get(searchInternalNode(minkey, curr.getKeys()));
             indexNodesAccess++;
-//            System.out.println("Index Node Access: Node= " + curr.getKeys());
+            System.out.println("Index Node Access: Node= " + curr.getKeys());
         }
 
         List<Key> keyList = curr.getKeys();
@@ -547,10 +547,11 @@ public class BPlusTree {
 
                 // dataBlocksAccess++;
                 if (minkey <= keyList.get(i).getKey() && maxkey >= keyList.get(i).getKey()) {
-
-//                    System.out.println("Data Block Access: Key=" + keyList.get(i).getKey());
-//                    System.out.println("Value Size=" + keyList.get(i).getValues().size() + " Records");
-//                    System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
+                    if(dataBlocksAccess <6) {
+                        System.out.println("Data Block Access: Key=" + keyList.get(i).getKey());
+                        System.out.println("Value Size=" + keyList.get(i).getValues().size() + " Records");
+                        System.out.println("Value (0)=" + keyList.get(i).getValues().get(0));
+                    }
                     dataBlocksAccess++;
 
                     searchValues.add(keyList.get(i).getValues());
@@ -569,12 +570,15 @@ public class BPlusTree {
             }
             keyList = curr.getKeys();
         }
-        int maxRecordsShown = searchValues.size() > 5 ? 5 : searchValues.size();
-        for (int i = 0; i < 5; i++) {
+        double totalRating = 0;
+        float numOfRecords = 0;
+        for (int i = 0; i < searchValues.size(); i++) {
             for (int j = 0; j < searchValues.get(i).size(); j++) {
-                searchValues.get(i).get(j).printRecord();
+                totalRating += searchValues.get(i).get(j).getAverageRating();
+                numOfRecords++;
             }
         }
+        System.out.println("Average of averageRating: " + totalRating/numOfRecords);
         return searchValues;
     }
 
