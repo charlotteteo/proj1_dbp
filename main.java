@@ -7,37 +7,6 @@ public class main {
 
     public static void main(String args[]) throws FileNotFoundException {
 
-        // // creating File instance to reference text file in Java
-        // File text = new File("./data-sample.tsv");
-
-        // // Creating Scanner instance to read File in Java
-        // Scanner scnr = new Scanner(text);
-
-        // // Reading each line of the file using Scanner class
-
-        // String line = scnr.nextLine();
-        // while (scnr.hasNextLine()) {
-        // line = scnr.nextLine();
-        // String[] values = line.split("\t");
-        // Record new_record = new Record(values[0],
-        // Float.parseFloat(values[1].strip()),
-        // Integer.parseInt(values[2].strip()));
-        // // new_record.printRecord();
-        // }
-        // TESTING BLOCK
-        // Block block = new Block();
-        // Record rec = new Record("2314as", (float) 6.3, 4);
-        // // Initialise Database
-        // Database database = new Database(50000000, 200);
-        // database.printInformation();
-        // database.allocateRecordToBlock(block, rec);
-        // Record rec1 = new Record("2314as", (float) 6.3, 4);
-        // database.allocateRecordToBlock(block, rec1);
-        // database.allocateBlock(block);
-        // database.printInformation();
-        // database.printRecords();
-
-        // ALLOCATE RECORDS TO MEMORY
         Scanner scan = new Scanner(System.in);
         boolean exit = false;
         boolean optionSelected = false;
@@ -52,7 +21,6 @@ public class main {
             int option = scan.nextInt();
             switch (option) {
                 case 1:
-                    // Initialise Database
                     num = 200;
                     database = new Database(100000000, 200);
                     exit = true;
@@ -77,19 +45,14 @@ public class main {
 
         if (optionSelected == true) {
 
-            // File text = new File("./data-2.tsv");
             File text = new File("./data-2.tsv");
-            // File text = new File("./data-2.tsv");
-            // Creating Scanner instance to read File in Java
             Scanner scnr = new Scanner(text);
-
-            // Reading each line of the file using Scanner class
 
             String line = scnr.nextLine();
             int n = (int) (num - 8) / 12;
             BPlusTree tree = new BPlusTree(n);
             Block block = new Block();
-            // keep track of not allocated block
+
             int blockCreated = 1;
             int blockAllocated = 0;
             while (scnr.hasNextLine()) {
@@ -97,9 +60,8 @@ public class main {
                 String[] values = line.split("\t");
                 Record new_record = new Record(values[0], Float.parseFloat(values[1].strip()),
                     Integer.parseInt(values[2].strip()));
-                tree.insertKey(Integer.parseInt(String.valueOf(Integer.parseInt(values[2].strip()))),
+                tree.insertNodeKey(Integer.parseInt(String.valueOf(Integer.parseInt(values[2].strip()))),
                     new_record);
-                // add all records to block and add to memory
                 if (database.allocateRecordToBlock(block, new_record) == 0) {
                    blockAllocated++;
                     database.allocateBlock(block);
@@ -110,13 +72,7 @@ public class main {
             }
             if (blockCreated != blockAllocated) {
                 database.allocateBlock(block);
-                // tree.insertKey(Float.parseFloat(String.valueOf(values[1])), new_record);
             }
-            System.out.println("Reading file...");
-            // database.printRecords();
-            // database.printInformation();
-            // tree.displayTreeInfo();
-            System.out.println("File read");
 
             boolean exitExperiment = false;
             try {
@@ -138,13 +94,13 @@ public class main {
                             break;
                         case 2:
                             System.out.println("----Experiment 2----");
-                            tree.displayTreeInfo();
+                            tree.printTree();
                             System.out.println("The parameter n of the B+ tree = " + n);
-                            tree.displayHeightInfo();
+                            tree.printHeightInfo();
                             break;
                         case 3:
                             System.out.println("----Experiment 3----");
-                            List<Record> searchValues = tree.searchKey(500);
+                            List<Record> searchValues = tree.searchNodeKey(500);
                             float sum = 0;
                             for (int j = 0; j < searchValues.size(); j++) {
                                 System.out.print("TConst = ");
@@ -162,17 +118,17 @@ public class main {
                             break;
                         case 4:
                             System.out.println("----Experiment 4----");
-                            tree.searchKeyRange(30000, 40000);
+                            tree.searchNodeKeyRange(30000, 40000);
                             tree.printIndexNodeAccess();
                             tree.printDataBlockAccess();
 
                             break;
                         case 5:
                             System.out.println("----Experiment 5----");
-                            tree.deleteKey(1000);
-							tree.displayTreeInfo();
-							tree.displayHeightInfo();
-							tree.displayUpdatedNodesInfo();
+                            tree.deleteNodeKey(1000);
+							tree.printTree();
+							tree.printHeightInfo();
+							tree.printUpdatedNodesInfo();
                             break;
                         case 6:
                             // Close all scanner at the end
@@ -193,7 +149,6 @@ public class main {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

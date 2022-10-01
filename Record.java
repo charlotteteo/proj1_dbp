@@ -20,8 +20,4 @@ public class Record {
 	public int getNumVotes() {
 		return numVotes;
 	}
-
-	public void printRecord() {
-		System.out.println("tconst: " + tconst + ",average rating: " + averageRating + ",number of votes: " + numVotes);
-	}
 }
