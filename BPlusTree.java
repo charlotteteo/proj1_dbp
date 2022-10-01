@@ -155,6 +155,38 @@ public class BPlusTree {
         }
     }
 
+    public int searchInternalNodeKey(List<Key> keyList, float key) {
+        int index = -1;
+        int start = 0;
+        int mid;
+        int end = keyList.size() - 1;
+
+        if (key < keyList.get(start).getKey()) {
+            return 0;
+        }
+
+        if (key >= keyList.get(end).getKey()) {
+            return keyList.size();
+        }
+
+        while (start <= end) {
+            mid = (start + end) / 2;
+
+            if (key < keyList.get(mid).getKey() && key >= keyList.get(mid - 1).getKey()) {
+                index = mid;
+                break;
+
+            } else if (key >= keyList.get(mid).getKey()) {
+                start = mid + 1;
+
+            } else {
+                end = mid - 1;
+
+            }
+        }
+        return index;
+    }
+
     private void mergeInternalNodeKey(Node nodeF, Node nodeT) {
         Node insertedChild = nodeF.getChildren().get(0);
         Key insertedKey = nodeF.getKeys().get(0);
@@ -193,36 +225,103 @@ public class BPlusTree {
         }
     }
 
-    public int searchInternalNodeKey(List<Key> keyList, float key) {
-        int index = -1;
-        int start = 0;
-        int mid;
-        int end = keyList.size() - 1;
+    public List<Record> searchNodeKey(float key) {
+        Node currentNode = this.root;
 
-        if (key < keyList.get(start).getKey()) {
-            return 0;
+        List<Record> searchList = null;
+
+        dataBlocksAccessed = 0;
+        indexNodesAccessed = 0;
+        indexNodesAccessed++;
+
+        System.out.println("Index Node Access: Node = " + currentNode.getKeys());
+
+        // Traverse to the corresponding external node that would contain this key
+        while (currentNode.getChildren().size() != 0) {
+            currentNode = currentNode.getChildren().get(searchInternalNodeKey(currentNode.getKeys(), key));
+            indexNodesAccessed++;
+
+            System.out.println("Index Node Access: Node = " + currentNode.getKeys());
         }
 
-        if (key >= keyList.get(end).getKey()) {
-            return keyList.size();
-        }
+        List<Key> keyList = currentNode.getKeys();
 
-        while (start <= end) {
-            mid = (start + end) / 2;
+        for (int i = 0; i < keyList.size(); i++) {
+            if (key == keyList.get(i).getKey()) {
+                System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
+                System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
+                System.out.println("Value = " + keyList.get(i).getValues());
 
-            if (key < keyList.get(mid).getKey() && key >= keyList.get(mid - 1).getKey()) {
-                index = mid;
+                dataBlocksAccessed++;
+
+                searchList = keyList.get(i).getValues();
+            }
+            if (key < keyList.get(i).getKey()) {
                 break;
-
-            } else if (key >= keyList.get(mid).getKey()) {
-                start = mid + 1;
-
-            } else {
-                end = mid - 1;
-
             }
         }
-        return index;
+        return searchList;
+    }
+
+    public List<List<Record>> searchNodeKeyRange(float minimumKey, float maximumKey) {
+        List<List<Record>> searchValues = new ArrayList<>();
+        Node currentNode = this.root;
+
+        dataBlocksAccessed = 0;
+        indexNodesAccessed = 0;
+        indexNodesAccessed++;
+
+        System.out.println("Index Node Access: Node = " + currentNode.getKeys());
+
+        while (currentNode.getChildren().size() != 0) {
+            currentNode = currentNode.getChildren().get(searchInternalNodeKey(currentNode.getKeys(), minimumKey));
+            indexNodesAccessed++;
+
+            System.out.println("Index Node Access: Node = " + currentNode.getKeys());
+        }
+
+        List<Key> keyList = currentNode.getKeys();
+
+        while (true) {
+            for (int i = 0; i < keyList.size(); i++) {
+                if (minimumKey <= keyList.get(i).getKey() && maximumKey >= keyList.get(i).getKey()) {
+                    if (dataBlocksAccessed < 5) {
+                        System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
+                        System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
+                        System.out.println("Value = " + keyList.get(i).getValues().get(0));
+                        System.out.println("TConst = " + keyList.get(i).getValues().get(0).getTConst()
+                                + " AverageRating = " + keyList.get(i).getValues().get(0).getAverageRating()
+                                + " NumVote = " + keyList.get(i).getValues().get(0).getNumVotes());
+
+                    }
+                    dataBlocksAccessed++;
+
+                    searchValues.add(keyList.get(i).getValues());
+                }
+
+                if (maximumKey < keyList.get(i).getKey()) {
+                    break;
+                }
+            }
+
+            currentNode = currentNode.getNextNode();
+            if (currentNode == null) {
+                break;
+            }
+
+            keyList = currentNode.getKeys();
+        }
+
+        double totalRating = 0;
+        float noOfRecords = 0;
+        for (int i = 0; i < searchValues.size(); i++) {
+            for (int j = 0; j < searchValues.get(i).size(); j++) {
+                totalRating += searchValues.get(i).get(j).getAverageRating();
+                noOfRecords++;
+            }
+        }
+        System.out.println("Average of averageRating: " + totalRating / noOfRecords);
+        return searchValues;
     }
 
     public void deleteNodeKey(float key) {
@@ -277,44 +376,6 @@ public class BPlusTree {
                 }
             }
         }
-    }
-
-    public List<Record> searchNodeKey(float key) {
-        Node currentNode = this.root;
-
-        List<Record> searchList = null;
-
-        dataBlocksAccessed = 0;
-        indexNodesAccessed = 0;
-        indexNodesAccessed++;
-
-        System.out.println("Index Node Access: Node = " + currentNode.getKeys());
-
-        // Traverse to the corresponding external node that would contain this key
-        while (currentNode.getChildren().size() != 0) {
-            currentNode = currentNode.getChildren().get(searchInternalNodeKey(currentNode.getKeys(), key));
-            indexNodesAccessed++;
-
-            System.out.println("Index Node Access: Node = " + currentNode.getKeys());
-        }
-
-        List<Key> keyList = currentNode.getKeys();
-
-        for (int i = 0; i < keyList.size(); i++) {
-            if (key == keyList.get(i).getKey()) {
-                System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
-                System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
-                System.out.println("Value = " + keyList.get(i).getValues());
-
-                dataBlocksAccessed++;
-
-                searchList = keyList.get(i).getValues();
-            }
-            if (key < keyList.get(i).getKey()) {
-                break;
-            }
-        }
-        return searchList;
     }
 
     public void printTree() {
@@ -387,74 +448,9 @@ public class BPlusTree {
         }
     }
 
-    public void printHeightInfo() {
-        System.out.println("Tree height = " + height);
-    }
-
     public void printUpdatedNodesInfo() {
         System.out.println("No. of Merged nodes = " + mergedNo);
         System.out.println("No. of Deleted nodes = " + deletedNo);
-    }
-
-    public List<List<Record>> searchNodeKeyRange(float minimumKey, float maximumKey) {
-        List<List<Record>> searchValues = new ArrayList<>();
-        Node currentNode = this.root;
-
-        dataBlocksAccessed = 0;
-        indexNodesAccessed = 0;
-        indexNodesAccessed++;
-
-        System.out.println("Index Node Access: Node = " + currentNode.getKeys());
-
-        while (currentNode.getChildren().size() != 0) {
-            currentNode = currentNode.getChildren().get(searchInternalNodeKey(currentNode.getKeys(), minimumKey));
-            indexNodesAccessed++;
-
-            System.out.println("Index Node Access: Node = " + currentNode.getKeys());
-        }
-
-        List<Key> keyList = currentNode.getKeys();
-
-        while (true) {
-            for (int i = 0; i < keyList.size(); i++) {
-                if (minimumKey <= keyList.get(i).getKey() && maximumKey >= keyList.get(i).getKey()) {
-                    if (dataBlocksAccessed < 5) {
-                        System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
-                        System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
-                        System.out.println("Value = " + keyList.get(i).getValues().get(0));
-                        System.out.println("TConst = " + keyList.get(i).getValues().get(0).getTConst()
-                                + " AverageRating = " + keyList.get(i).getValues().get(0).getAverageRating()
-                                + " NumVote = " + keyList.get(i).getValues().get(0).getNumVotes());
-
-                    }
-                    dataBlocksAccessed++;
-
-                    searchValues.add(keyList.get(i).getValues());
-                }
-
-                if (maximumKey < keyList.get(i).getKey()) {
-                    break;
-                }
-            }
-
-            currentNode = currentNode.getNextNode();
-            if (currentNode == null) {
-                break;
-            }
-
-            keyList = currentNode.getKeys();
-        }
-        
-        double totalRating = 0;
-        float noOfRecords = 0;
-        for (int i = 0; i < searchValues.size(); i++) {
-            for (int j = 0; j < searchValues.get(i).size(); j++) {
-                totalRating += searchValues.get(i).get(j).getAverageRating();
-                noOfRecords++;
-            }
-        }
-        System.out.println("Average of averageRating: " + totalRating / noOfRecords);
-        return searchValues;
     }
 
     public void printIndexNodeAccess() {
@@ -465,4 +461,7 @@ public class BPlusTree {
         System.out.println("No. of Data Block Access: " + dataBlocksAccessed);
     }
 
+    public void printHeightInfo() {
+        System.out.println("Tree height = " + height);
+    }
 }
