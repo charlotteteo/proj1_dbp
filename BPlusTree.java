@@ -250,7 +250,6 @@ public class BPlusTree {
             if (key == keyList.get(i).getKey()) {
                 System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
                 System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
-                System.out.println("Value = " + keyList.get(i).getValues());
 
                 dataBlocksAccessed++;
 
@@ -288,7 +287,6 @@ public class BPlusTree {
                     if (dataBlocksAccessed < 5) {
                         System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
                         System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
-                        System.out.println("Value = " + keyList.get(i).getValues().get(0));
                         System.out.println("TConst = " + keyList.get(i).getValues().get(0).getTConst()
                                 + " AverageRating = " + keyList.get(i).getValues().get(0).getAverageRating()
                                 + " NumVote = " + keyList.get(i).getValues().get(0).getNumVotes());
