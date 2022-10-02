@@ -77,7 +77,7 @@ public class Database {
         // pop block from memory
     }
 
-    public void printInformation() {
+    public void displayInformation() {
         System.out.println("Overall memory size:" + diskSize + " bytes");
         System.out.println("Overall block size:" + blockSize + " bytes");
         System.out.println("Each record size:" + recordSize + " bytes");
@@ -90,14 +90,17 @@ public class Database {
         System.out.println("Record size:" + totalRecordSize + " bytes");
     }
 
-    public void printRecords() {
-        for (int x = 0; x < memoryBlock.size(); x++) {
+    public void displayRecords(int num) {
+        if (num > memoryBlock.size()) {
+            num = memoryBlock.size();
+        }
+        for (int x = 0; x < num; x++) {
             for (int y = 0; y < memoryBlock.get(x).getRecords().size(); y++) {
-                System.out.println("record " + y + " in block " + x + " (T Const): " +
+                System.out.println("record " + y + " in block " + (x + 1) + " (T Const): " +
                         memoryBlock.get(x).getRecords().get(y).getTConst());
-                System.out.println("record " + y + " in block " + x + " (Average Rating):" +
+                System.out.println("record " + y + " in block " + (x + 1) + " (Average Rating):" +
                         memoryBlock.get(x).getRecords().get(y).getAverageRating());
-                System.out.println("record " + y + " in block " + x + " (Number of Votes):" +
+                System.out.println("record " + y + " in block " + (x + 1) + " (Number of Votes):" +
                         memoryBlock.get(x).getRecords().get(y).getNumVotes());
             }
         }

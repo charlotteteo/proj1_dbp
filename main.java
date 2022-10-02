@@ -89,7 +89,7 @@ public class main {
                     switch (expOption) {
                         case 1:
                             System.out.println("----Experiment 1----");
-                            database.printInformation();
+                            database.displayInformation();
                             break;
                         case 2:
                             System.out.println("----Experiment 2----");
