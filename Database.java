@@ -26,7 +26,7 @@ public class Database {
     private Block blk;
 
     public Database(int diskSize, int blockSize) {
-        // unchanged - disk,individual block size, total number of blocks
+        // disk,individual block size, total number of blocks
         this.diskSize = diskSize;
         this.blockSize = blockSize;
 
@@ -56,7 +56,6 @@ public class Database {
         }
 
         else {
-            // System.out.println(newBlk + "full");
             return 0;
         }
     }
@@ -65,7 +64,6 @@ public class Database {
         this.totalNoOfBlocksAvail--;
         this.totalNoOfBlocksUsed++;
         memoryBlock.add(newBlk);
-        // System.out.println("Allocated " + newBlk + " to Memory");
     }
 
     public void deallocateBlock(Block newBlk) {

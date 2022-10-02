@@ -66,7 +66,7 @@ public class BPlusTree {
         int index = searchInternalNodeKey(node.getKeys(), key);
 
         if (index != 0 && node.getKeys().get(index - 1).getKey() == key) {
-            node.getKeys().get(index - 1).getValues().add(record);
+            node.getKeys().get(index - 1).getRec().add(record);
 
         } else {
             Key keyNew = new Key(key, record);
@@ -249,14 +249,15 @@ public class BPlusTree {
         for (int i = 0; i < keyList.size(); i++) {
             if (key == keyList.get(i).getKey()) {
                 System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
-                System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
-                System.out.println("Value = " + keyList.get(i).getValues());
+                System.out.println("Value Size = " + keyList.get(i).getRec().size() + " Records");
+                System.out.println("Value = " + keyList.get(i).getRec());
 
                 dataBlocksAccessed++;
 
-                searchList = keyList.get(i).getValues();
+                searchList = keyList.get(i).getRec();
             }
             if (key < keyList.get(i).getKey()) {
+                System.out.println("Value not found");
                 break;
             }
         }
@@ -287,16 +288,16 @@ public class BPlusTree {
                 if (minimumKey <= keyList.get(i).getKey() && maximumKey >= keyList.get(i).getKey()) {
                     if (dataBlocksAccessed < 5) {
                         System.out.println("Data Block Access: Key = " + keyList.get(i).getKey());
-                        System.out.println("Value Size = " + keyList.get(i).getValues().size() + " Records");
-                        System.out.println("Value = " + keyList.get(i).getValues().get(0));
-                        System.out.println("TConst = " + keyList.get(i).getValues().get(0).getTConst()
-                                + " AverageRating = " + keyList.get(i).getValues().get(0).getAverageRating()
-                                + " NumVote = " + keyList.get(i).getValues().get(0).getNumVotes());
+                        System.out.println("Value Size = " + keyList.get(i).getRec().size() + " Records");
+                        System.out.println("Value = " + keyList.get(i).getRec().get(0));
+                        System.out.println("TConst = " + keyList.get(i).getRec().get(0).getTConst()
+                                + " AverageRating = " + keyList.get(i).getRec().get(0).getAverageRating()
+                                + " NumVote = " + keyList.get(i).getRec().get(0).getNumVotes());
 
                     }
                     dataBlocksAccessed++;
 
-                    searchValues.add(keyList.get(i).getValues());
+                    searchValues.add(keyList.get(i).getRec());
                 }
 
                 if (maximumKey < keyList.get(i).getKey()) {
@@ -435,8 +436,8 @@ public class BPlusTree {
             System.out.print(currentNode.getKeys().get(i).getKey() + " ");
             String values = "";
 
-            for (int j = 0; j < currentNode.getKeys().get(i).getValues().size(); j++) {
-                values = values + currentNode.getKeys().get(i).getValues().get(j) + ",";
+            for (int j = 0; j < currentNode.getKeys().get(i).getRec().size(); j++) {
+                values = values + currentNode.getKeys().get(i).getRec().get(j) + ",";
                 nodeRecordCount++;
 
             }

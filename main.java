@@ -45,7 +45,7 @@ public class main {
 
         if (optionSelected == true) {
 
-            File text = new File("./data-2.tsv");
+            File text = new File("./data-sample.tsv");
             Scanner scanner = new Scanner(text);
 
             String line = scanner.nextLine();

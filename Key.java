@@ -3,19 +3,19 @@ import java.util.List;
 
 public class Key {
 	private float key;
-	List<Record> values;
+	List<Record> rec;
 
 	public Key(float key, Record value) {
 		this.key = key;
-		if (this.values == null) {
-			this.values = new ArrayList<>();
+		if (this.rec == null) {
+			this.rec = new ArrayList<>();
 		}
-		this.values.add(value);
+		this.rec.add(value);
 	}
-	
+
 	public Key(float key) {
 		this.key = key;
-		this.values = new ArrayList<>();
+		this.rec = new ArrayList<>();
 	}
 
 	public float getKey() {
@@ -26,16 +26,16 @@ public class Key {
 		this.key = key;
 	}
 
-	public List<Record> getValues() {
-		return values;
+	public List<Record> getRec() {
+		return rec;
 	}
 
-	public void setValues(List<Record> values) {
-		this.values = values;
+	public void setrec(List<Record> rec) {
+		this.rec = rec;
 	}
 
-    // print key information
+	// print key information
 	public String toString() {
-		return "" + key +  "";
+		return "" + key + "";
 	}
 }
